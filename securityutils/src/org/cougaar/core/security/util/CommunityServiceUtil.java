@@ -860,6 +860,39 @@ public class CommunityServiceUtil {
   }
 
 
+  private boolean isEventOfInterest(CommunityChangeEvent event,
+                                           String communityName, String communityType){
+    if (event.getType() != CommunityChangeEvent.ADD_COMMUNITY &&
+        event.getType() != CommunityChangeEvent.ENTITY_ATTRIBUTES_CHANGED &&
+        event.getType() != CommunityChangeEvent.COMMUNITY_ATTRIBUTES_CHANGED &&
+        event.getType() != CommunityChangeEvent.ADD_ENTITY) {
+      return false;
+    }
+    Community community = event.getCommunity();
+    if(communityName!=null){
+        if(!(community.getName().equals(communityName))){
+          if (_log.isDebugEnabled()) {
+            _log.debug("Agent "+_agent+" " +community.getName() + " is not the community  .We are looking for " +communityName);
+            _log.debug("Waiting for response in agent : "+_agent );
+          }
+          return false;
+        }
+    }
+    if(communityType!=null){
+      if (!isCommunityType(community,communityType)) {
+        if (_log.isDebugEnabled()) {
+          _log.debug("Agent "+ _agent +" " +community.getName() + " is not of type " + 
+                     communityType);
+          _log.debug("Waiting for response in agent : "+_agent);
+        }
+        return false;
+      }
+    }
+    printCommunityInfo(community);
+    return true ;
+    
+  }
+
   private class GetCommunity implements CommunityChangeListener {
     private String                       _communityType;
     private String                       _role;
@@ -902,28 +935,16 @@ public class CommunityServiceUtil {
         _cs.removeListener(this);
         return;
       }
-      if (event.getType() != CommunityChangeEvent.ADD_COMMUNITY &&
-          event.getType() != CommunityChangeEvent.ENTITY_ATTRIBUTES_CHANGED &&
-          event.getType() != CommunityChangeEvent.COMMUNITY_ATTRIBUTES_CHANGED &&
-          event.getType() != CommunityChangeEvent.ADD_ENTITY) {
-        return; // not a change we care about
-      }
-      Community community = event.getCommunity();
-      if (!isCommunityType(community, _communityType)) {
-        if (_log.isDebugEnabled()) {
-          _log.debug("Agent "+ _agent+ " "+community.getName() + " is not of type " + 
-                     _communityType);
-        }
+      if (!isEventOfInterest(event,null,_communityType)){
         return;
       }
-
       if (_log.isDebugEnabled()) {
         _log.debug(" Change Info for Agent "+ _agent+ " community change: " + 
                    CommunityChangeEvent.getChangeTypeAsString(event.getType()) +
                    ", " +
                    event.getWhatChanged());
       }
-      printCommunityInfo(community);
+      Community community = event.getCommunity();
       if (hasRole(community, _role, _containsRole)) {
         // found it!
         if(!_withUpdates){
@@ -988,19 +1009,7 @@ public class CommunityServiceUtil {
         _cs.removeListener(this);
         return;
       }
-      
-      if (event.getType() != CommunityChangeEvent.ADD_COMMUNITY &&
-          event.getType() != CommunityChangeEvent.ENTITY_ATTRIBUTES_CHANGED &&
-          event.getType() != CommunityChangeEvent.COMMUNITY_ATTRIBUTES_CHANGED &&
-          event.getType() != CommunityChangeEvent.ADD_ENTITY) {
-        return; // not a change we care about
-      }
-      Community community = event.getCommunity();
-      if (!isCommunityType(community, _communityType)) {
-        if (_log.isDebugEnabled()) {
-          _log.debug("Agent "+ _agent+" " +community.getName() + " is not of type " + 
-                     _communityType);
-        }
+      if (!isEventOfInterest(event,null,_communityType)){
         return;
       }
       if (_log.isDebugEnabled()) {
@@ -1010,7 +1019,7 @@ public class CommunityServiceUtil {
                    event.getWhatChanged());
         // printCommunityInfo(community);
       }
-      printCommunityInfo(community);
+      Community community = event.getCommunity();
       // Now while I understand that if the CommunityService is telling
       // me about this community, I must be a member, I don't trust it.
       // I'll check the membership.
@@ -1286,7 +1295,7 @@ public class CommunityServiceUtil {
   }
    
   private class GetAgentInCommunity implements CommunityChangeListener {
-    private String                       _communityName;
+    private String                      _communityName;
     private String                      _communityType;
     private CommunityServiceUtilListener _listener;
     private WarnSchedulable              _timerTask;
@@ -1301,6 +1310,7 @@ public class CommunityServiceUtil {
       _listener = listener;
       _timerTask = timerTask;
       _role = role;
+      _communityType = communityType;
     }
 
     public synchronized void communityChanged(CommunityChangeEvent event) {
@@ -1314,61 +1324,17 @@ public class CommunityServiceUtil {
         _cs.removeListener(this);
         return;
       }
-      if (event.getType() != CommunityChangeEvent.ADD_COMMUNITY &&
-          event.getType() != CommunityChangeEvent.ENTITY_ATTRIBUTES_CHANGED &&
-          event.getType() != CommunityChangeEvent.COMMUNITY_ATTRIBUTES_CHANGED &&
-          event.getType() != CommunityChangeEvent.ADD_ENTITY) {
-        return; // not a change we care about
+      if (!isEventOfInterest(event,_communityName,_communityType)){
+        return;
       }
       Community community = event.getCommunity();
-      
-      if(_communityName!=null){
-        if(!(community.getName().equals(_communityName))){
-          if (_log.isDebugEnabled()) {
-            _log.debug("Agent "+ _agent+" " +community.getName() + " is not the community  .We are looking for " +_communityName);
-            _log.debug("Waiting for response in agent : "+_agent + " in GetAgentInCommunity CommunityChangeListener when community name are not same ");
-          }
-          return;
-        }
-      }
-      else {
-        if (_log.isDebugEnabled()) {
-          _log.debug("Agent "+ _agent+ "community :  " +community.getName() + " Passed Communityname is null:");
-        }
-      }
-      if(_communityType!=null){
-        if (!isCommunityType(community,_communityType)) {
-          if (_log.isDebugEnabled()) {
-            _log.debug("Agent "+ _agent+" " +community.getName() + " is not of type " + 
-                       _communityType);
-            _log.debug("Waiting for response in agent : "+_agent + " in GetAgentInCommunity CommunityChangeListener");
-          }
-          return;
-        }
-      }
-      
-
       if (_log.isDebugEnabled()) {
         _log.debug(" Change Info for Agent "+ _agent+" community change: " + 
                    CommunityChangeEvent.getChangeTypeAsString(event.getType()) +
                    ", " +
                    event.getWhatChanged());
       }
-      printCommunityInfo(community);
-      
-      // Now while I understand that if the CommunityService is telling
-      // me about this community, I must be a member, I don't trust it.
-      // I'll check the membership.
-      /*
-        if (!hasRole(community,_role, true)) {
-        if (_log.isDebugEnabled()) {
-        _log.debug(_agent + " is not really part of (" + 
-        community.getName() + ") yet");
-        _log.debug("Waiting for response in agent : "+_agent + " in GetAgentInCommunity CommunityChangeListener");
-        }
-        return;
-        }
-      */
+          
       Set set = community.search("(Role=" + _role + ")", 
                                  Community.AGENTS_ONLY);
       if (set.isEmpty()) {
