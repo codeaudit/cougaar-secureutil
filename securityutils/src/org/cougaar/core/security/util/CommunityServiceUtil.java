@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.lang.reflect.Method;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -1309,6 +1310,58 @@ public class CommunityServiceUtil {
     public String getWarning() {
       return _wt.getWarning();
     }
+    // TODO For B11_4 integration
+    // Replace introspection with simple method invocation:
+    // retval = _schedulable.getBlockingExcuse();
+    public String getBlockingExcuse() {
+      String retval = null;
+      try {
+        Method m = _sched.getClass().getMethod("getBlockingExcuse", null);
+        retval = (String) m.invoke(_sched, null);
+      }
+      catch (Exception e) {
+        // This should never happen in B11_2, as Schedulable does
+        // not implement getBlockingExcuse()
+      }
+      return retval;
+    }
+    public int getBlockingType() {
+      Integer retval = new Integer(-1);
+      try {
+        Method m = _sched.getClass().getMethod("getBlockingType", null);
+        retval = (Integer) m.invoke(_sched, null);
+      }
+      catch (Exception e) {
+        // This should never happen in B11_2, as Schedulable does
+        // not implement getBlockingType()
+      }
+      return retval.intValue();
+    }
+    public long getTimestamp() {
+      Long retval = new Long(-1);
+      try {
+        Method m = _sched.getClass().getMethod("getTimestamp", null);
+        retval = (Long) m.invoke(_sched, null);
+      }
+      catch (Exception e) {
+        // This should never happen in B11_2, as Schedulable does
+        // not implement getTimestamp()
+      }
+      return retval.longValue();
+    }
+    public String getName() {
+      String retval = null;
+      try {
+        Method m = _sched.getClass().getMethod("getName", null);
+        retval = (String) m.invoke(_sched, null);
+      }
+      catch (Exception e) {
+        // This should never happen in B11_2, as Schedulable does
+        // not implement getName()
+      }
+      return retval;
+    }
+
   }
 
   private class WarnThread implements Runnable {
