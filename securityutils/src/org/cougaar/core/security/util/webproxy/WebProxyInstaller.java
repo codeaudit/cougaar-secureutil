@@ -101,6 +101,7 @@ public class WebProxyInstaller
       Method m = cmdClass.getDeclaredMethod("main", parameters);
       Object [] objectArgs = { newargs };
       m.invoke(null, objectArgs);
+      System.exit(0);   /* needed for some reason */
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -120,7 +121,7 @@ public class WebProxyInstaller
       WebProxyConfig.init();
     } catch (IOException ioe) {
       if (_log.isErrorEnabled()) {
-        _log.error("web proxy not installed - continuing");
+        _log.error("web proxy not installed - continuing", ioe);
       }
       return;
     }
