@@ -33,9 +33,9 @@ public class AgentCompromiseInfo implements Serializable {
   public final static String COMPLETION_CODE = "COMPLETION_CODE";
 
   // THREAT CON LEVEL FOR COMPROMISE
-  public final static String NONE = "NONE";
-  public final static String MODERATE = "MODERATE";
-  public final static String SEVERE = "SEVERE";
+  public final static String NONE = "None";
+  public final static String MODERATE = "Moderate";
+  public final static String SEVERE = "Severe";
 
   // Completion code definition
   public final static String COMPLETED = "COMPLETED";
