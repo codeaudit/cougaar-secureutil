@@ -37,7 +37,6 @@ import org.cougaar.core.util.UID;
  */
 public class SharedDataRelay implements Relay.Source, Relay.Target {
     private MessageAddress source;
-    private MessageAddress target;
     private UID uid;
 
     private Object content;
@@ -52,7 +51,6 @@ public class SharedDataRelay implements Relay.Source, Relay.Target {
     public SharedDataRelay(UID uid, MessageAddress source, MessageAddress target, Object content, Object response) {
         this.uid= uid;
         this.source= source;
-        this.target= target;
 
         this.content= content;
         this.response= response;

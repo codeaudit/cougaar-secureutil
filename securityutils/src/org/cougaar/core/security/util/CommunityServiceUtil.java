@@ -76,8 +76,8 @@ public class CommunityServiceUtil {
   public static final String MANAGER_ROLE = "Manager";
   public static final String MANAGER_ROOT = "Root";
   public static final String MEMBER_ROLE = "Member";
-  private static final String ROLE_FILTER = "(Role=" + MANAGER_ROLE +")";
-  private static final String ROLE_MEMBER_FILTER = "(Role=" + MEMBER_ROLE +")";
+  //private static final String ROLE_FILTER = "(Role=" + MANAGER_ROLE +")";
+  //private static final String ROLE_MEMBER_FILTER = "(Role=" + MEMBER_ROLE +")";
   private static final String ROOT_FILTER = "(&(Role=" + MANAGER_ROOT +")" +
   "(Role=" + MANAGER_ROLE + "))";
 
@@ -999,7 +999,6 @@ public class CommunityServiceUtil {
     private String                       _role;
     private CommunityServiceUtilListener _listener;
     private WarnSchedulable              _timerTask;
-    private boolean                      _allDone;
     private boolean                      _containsRole;
 
     public GetCommunityWithUpdates(CommunityServiceUtilListener listener, 

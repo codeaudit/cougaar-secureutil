@@ -36,7 +36,6 @@ public class SecurityEventPublisher {
    * A Map of Class (FailureEvent class) to Methods.
    */
   private static Map     m_eventTypes = new HashMap();
-  private static List    m_events = new ArrayList();
   private static Logger  _log;
   
   static {

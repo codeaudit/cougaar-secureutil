@@ -42,13 +42,11 @@ public class SignatureInputStream
   implements SignedDigestInputStream
 {
   private Signature _signature;
-  private InputStream _is;
 
   public SignatureInputStream(InputStream is, String algorithm, 
                               PublicKey pubKey) 
     throws NoSuchAlgorithmException, InvalidKeyException {
     super(is, MessageDigest.getInstance("SHA"));
-    _is = is;
     _signature = Signature.getInstance(algorithm);
     _signature.initVerify(pubKey);
   }

@@ -99,7 +99,11 @@ public class CertificateUtility {
 	  x509certimpl
 	});
       }
-      catch(CertificateException certificateexception) { }
+      catch(CertificateException certificateexception) {
+         if (_log.isDebugEnabled()) {
+           _log.debug("Certificate exception: " + certificateexception);
+         }
+      }
       catch(IOException ioexception1) {
 	throw new CertificateException(ioexception1.getMessage());
       }
@@ -404,7 +408,9 @@ public class CertificateUtility {
       return new X500Name(dname);
     }
     catch (IOException iox) {
-
+      if (_log.isDebugEnabled()) {
+        _log.debug("IO exception: " + iox);
+      }
     }
     return null;
   }

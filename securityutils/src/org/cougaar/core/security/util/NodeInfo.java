@@ -59,7 +59,11 @@ public class NodeInfo
       Class vc = Class.forName("org.cougaar.Version");
       Field vf = vc.getField("version");
       version = (String) vf.get(null);
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      if (_log.isDebugEnabled()) {
+         _log.debug("Unable to get Cougaar version");
+      }
+    }
 
     if (version == null) {
       // Assume it is a recent version
@@ -146,7 +150,9 @@ public class NodeInfo
         //hostName = InetAddress.getLocalHost().getCanonicalHostName();
         hostName = InetAddress.getLocalHost().getHostName();
       } catch (UnknownHostException ex) {
-	System.err.println("Unable to get my host name: " + ex.toString());
+        if (_log.isErrorEnabled()) {
+           _log.error("Unable to get my host name: " + ex.toString());
+        }
       }
     }
     if (_log.isDebugEnabled()) {
