@@ -1,0 +1,29 @@
+#!/usr/bin/ruby
+####################################################
+# enclave_security_mnr_mgrs.rule
+# Adds EnclaveMnRManagers complete agent recipe
+
+if ! defined? CIP
+  CIP = ENV['COUGAAR_INSTALL_PATH']
+end
+$:.unshift File.join(CIP, 'csmart', 'assessment', 'lib')
+
+require 'security/lib/common_security_rules'
+
+unRegister = "org.cougaar.core.security.handoff.servlet.HandOffUnRegisterComponent"
+communityChanger = "org.cougaar.core.security.handoff.plugin.CommunityMembershipChangerPlugin"
+
+society.each_agent(true) do |agent|
+  if defined?(unRegister)
+      agent.add_component do |c|
+      c.classname = unRegister
+      c.add_argument("/handoffUnRegistration") 
+    end
+  end
+  if defined?(communityChanger)
+      agent.add_component do |c|
+      c.classname = communityChanger
+    end
+  end
+
+end
