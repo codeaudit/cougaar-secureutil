@@ -110,16 +110,6 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
         logging.debug("Monitoring is not installed  ");
       }
     }
-    /*
-      CrlManagementService crlMgmtService=(CrlManagementService)
-      serviceBroker.getService(this, CrlManagementService.class, null);
-      if(crlMgmtService==null){
-      crlMgmtService =false;
-      }
-      else {
-      crlMgmtService =true;
-      }
-    */
     crlMgmtService =true;
     return new UnRegisterServlet();
   }
@@ -241,24 +231,24 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
         blackboard.openTransaction();
         switch (cmd) {
         case HandOffUnRegistration.UNREGISTER_SENSOR :
-          sb.append(" publishUnregister called with sensor ");
+          sb.append(" <H3>Unregister sensor </H3> ");
           blackboard.publishAdd(new HandOffUnRegistration(HandOffUnRegistration.UNREGISTER_SENSOR));
           break;
           
         case HandOffUnRegistration.UNREGISTER_CRL :
-          sb.append(" publishUnregister called with crl  ");
+          sb.append(" <H3>Unregister CRL </H3> ");
           blackboard.publishAdd(new HandOffUnRegistration(HandOffUnRegistration.UNREGISTER_CRL));
           break ;
           	
         case HandOffUnRegistration.LEAVE_SECURITYCOMMUNITY :
-          sb.append(" publishUnregister called with Security Community ");
+          sb.append(" <H3>Unregister From Security Communities </H3> ");
           List comtype = new ArrayList();
           comtype.add(CommunityServiceUtil.SECURITY_COMMUNITY_TYPE);
           comtype.add(CommunityServiceUtil.MONITORING_SECURITY_COMMUNITY_TYPE);
           blackboard.publishAdd(new HandOffUnRegistration(HandOffUnRegistration.LEAVE_SECURITYCOMMUNITY,comtype));
           break ;
         case HandOffUnRegistration.JOIN__SECURITYCOMMUNITY :	
-          sb.append(" publish register called with Security Community "+ enclave);
+          sb.append(" <H3>Register To Security Communities in Enclave " + enclave+ "</H3> ");
           if(enclave!=null) {
             blackboard.publishAdd(new HandOffUnRegistration(HandOffUnRegistration.JOIN__SECURITYCOMMUNITY,enclave));
           }
@@ -275,6 +265,7 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
       finally {
         blackboard.closeTransaction();
       }
+      /*
       try {
         blackboard.openTransaction();
         Collection unregistercol =null;
@@ -299,6 +290,7 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
       finally {
         blackboard.closeTransaction();
       }
+      */
       return sb.toString();
     }
     
@@ -307,15 +299,15 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
       sb.append("<form name=\"unregister\" action=\"" +uri + "\" method=\"post\">");
       if(monitoring){
         sb.append("<INPUT TYPE=RADIO NAME=\"Sensor\" VALUE=\"1\" >Unregister Sensor<BR>");
-        sb.append("<INPUT TYPE=RADIO NAME=\"Sensor\" VALUE=\"4\">Register Sensor<BR>");
+        //sb.append("<INPUT TYPE=RADIO NAME=\"Sensor\" VALUE=\"4\">Register Sensor<BR>");
       }
       if(crlMgmtService){
         sb.append("<INPUT TYPE=RADIO NAME=\"CRL\" VALUE=\"2\">Unregister CRL<BR>");
-        sb.append("<INPUT TYPE=RADIO NAME=\"CRL\" VALUE=\"5\">Register For CRL<BR>");
+       // sb.append("<INPUT TYPE=RADIO NAME=\"CRL\" VALUE=\"5\">Register For CRL<BR>");
       }
       if((monitoring)|| (crlMgmtService)){
         sb.append("<INPUT TYPE=RADIO NAME=\"SecurityCommunity\" VALUE=\"3\">Leave Security Communities<BR>");
-        sb.append("<INPUT TYPE=RADIO NAME=\"SecurityCommunity\" VALUE=\"6\">Join Security Communities &nbsp;&nbsp;&nbsp;&nbsp;");
+        sb.append("<INPUT TYPE=RADIO NAME=\"SecurityCommunity\" VALUE=\"6\">Join Security Communities (will join MnR and Security community .It will also register sensor and nodes register for CRL Update &nbsp;&nbsp;&nbsp;&nbsp;");
         sb.append("<input TYPE=TEXT NAME=\"Enclave\" SIZE=\"40\" MAXLENGTH=\"40\" <BR>");
         sb.append("<input type=\"submit\" value=\"Submit\" onClick =\"submitme(unregister)\" >");
       }
