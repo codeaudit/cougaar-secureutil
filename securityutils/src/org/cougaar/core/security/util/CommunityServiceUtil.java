@@ -73,6 +73,7 @@ public class CommunityServiceUtil {
 
   public static final String SECURITY_COMMUNITY_TYPE = "Security";
   public static final String MONITORING_SECURITY_COMMUNITY_TYPE = "MnR-Security";
+  public static final String ROBUSTNESS_COMMUNITY_TYPE = "Robustness";
   public static final String MANAGER_ROLE = "Manager";
   public static final String MANAGER_ROOT = "Root";
   public static final String MEMBER_ROLE = "Member";
