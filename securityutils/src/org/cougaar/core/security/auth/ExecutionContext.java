@@ -48,4 +48,5 @@ public interface ExecutionContext {
    *         agent is specified for this context.
    */
   public MessageAddress getAgent();
+  public String getComponent();
 }
