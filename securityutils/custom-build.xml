@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." name="Cougaar security services custom build">
+
+    <!-- ********************************************************************************
+         * Custom build below
+         ******************************************************************************** -->
+    <path id="core.class.path">
+        <!-- Cougaar packages -->
+        <pathelement location="${cougaar.install.path}/lib/bootstrap.jar"/>
+        <pathelement location="${cougaar.install.path}/sys/log4j.jar"/>
+        <pathelement location="${cougaar.install.path}/lib/core.jar"/>
+        <pathelement location="${cougaar.install.path}/lib/util.jar"/>
+        <pathelement location="${cougaar.install.path}/lib/aggagent.jar"/>
+        <pathelement location="${cougaar.install.path}/lib/community.jar"/>
+        <pathelement location="${cougaar.install.path}/lib/mtsstd.jar"/>
+        <!-- Tomcat libraries -->
+        <pathelement location="${cougaar.install.path}/sys/tomcat_40.jar"/>
+
+        <pathelement location="${cougaar.install.path}/sys/servlet.jar"/>
+        <pathelement location="${cougaar.install.path}/sys/concurrent.jar"/>
+    </path>
+
+</project>
