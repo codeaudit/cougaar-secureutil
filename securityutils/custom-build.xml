@@ -31,7 +31,7 @@
               deprecation="true" destdir="${securityservices.classes}"
               source="1.4">
             <src path="${securityservices.src}"/>
-            <src path="${securityservices}/src_jdk14"/>
+            <src path="${securityservices.base}/src_jdk14"/>
             <include name="**"/>
           </javac>
         </then>
