@@ -128,8 +128,11 @@
     <!-- sign security services -->
     <target name="sign-jars" depends="jar-securityservices, jar-configs">
         <echo message="+++++ Signing jar files"/>
-        <signjar jar="${securityservices.classes}/${project.name}.jar" alias="privileged" 
+        <signjar jar="${securityservices.classes}/${project.name}.jar" alias="securitymodule" 
             signedjar="${securityservices.signed}/${project.name}.jar"
+            keystore="${securityservices.configs}/sign-jars/signingCA_keystore" 
+            storepass="keystore" verbose="false"/>
+        <signjar jar="${securityservices.signed}/${project.name}.jar" alias="privileged" 
             keystore="${securityservices.configs}/sign-jars/signingCA_keystore" 
             storepass="keystore" verbose="false"/>
     	
