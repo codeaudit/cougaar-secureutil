@@ -78,4 +78,11 @@ public class AdaptiveMnROperatingModes {
    */
   public final static String ADAPTIVE_FILTER_REPORTING_RATE = 
     "com.telcordia.mode.AdaptiveFilterOperatingModeReportingRate";
+  /**
+   * compromise threat level
+   * possible values: { NONE | MODERATE | SEVERE }
+   */
+  public final static String BLACKBOARD_THREAT_LEVEL =
+    "org.cougaar.core.security.monitoring.BLACKBOARD_THREAT_LEVEL";
+
 }
