@@ -30,4 +30,5 @@ import org.cougaar.core.security.policy.PersistenceManagerPolicy;
 
 public interface PersistenceMgrAvailListener {
   void newPMAvailable(PersistenceManagerPolicy pmp);
+  void removePM(PersistenceManagerPolicy pmp);
 }
