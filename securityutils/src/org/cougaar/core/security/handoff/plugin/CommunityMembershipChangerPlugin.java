@@ -39,7 +39,6 @@ import org.cougaar.core.blackboard.IncrementalSubscription;
 import org.cougaar.core.service.DomainService;
 import org.cougaar.core.service.BlackboardService;
 import org.cougaar.core.service.LoggingService;
-import org.cougaar.core.service.SchedulerService;
 import org.cougaar.core.service.ThreadService;
 import org.cougaar.core.thread.Schedulable;
 
