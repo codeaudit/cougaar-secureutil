@@ -30,6 +30,14 @@ package org.cougaar.core.security.crypto;
 import java.io.Serializable;
 
 public class CertificateType implements Serializable {
+  /** definition for title field of certificate */
+
+  public final static String CERT_TITLE_NODE = "node";
+  public final static String CERT_TITLE_AGENT = "agent";
+  public final static String CERT_TITLE_USER = "user";
+  public final static String CERT_TITLE_SERVER = "server";
+  public final static String CERT_TITLE_CA = "ca";
+
   // enumerator name
   private final String enum_name;
 
