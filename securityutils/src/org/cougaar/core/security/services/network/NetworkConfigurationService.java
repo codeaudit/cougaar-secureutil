@@ -54,5 +54,5 @@ public interface NetworkConfigurationService
    * encryption between the gateways may suffice.
    */
 
-  public int connectionAttributes(String source, String target);
+  public int connectionAttributes(String target);
 }
