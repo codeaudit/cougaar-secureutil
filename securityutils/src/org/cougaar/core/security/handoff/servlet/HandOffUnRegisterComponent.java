@@ -61,8 +61,6 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
   private MessageAddress agentId;
   private AgentIdentificationService ais;
   private BlackboardService blackboard;
-  private DomainService ds;
-  private CommunityService cs;
   private LoggingService logging;
   private String path;
   private boolean monitoring;
@@ -82,14 +80,6 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
 
   public void setBlackboardService(BlackboardService blackboard) {
     this.blackboard = blackboard;
-  }
-
-  public void setDomainService(DomainService ds) {
-    this.ds = ds;
-  }
-  
-  public void setCommunityService(CommunityService cs) {
-    this.cs=cs;
   }
 
   public void setAgentIdentificationService( AgentIdentificationService agentis){
@@ -215,7 +205,6 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
                        HttpServletResponse response) throws IOException {
       doGet(request,response);
       response.setContentType("text/html");
-      String cmd=null;
       String sensor = request.getParameter("Sensor");
       String crl = request.getParameter("CRL");
       String securityCommunity  = request.getParameter("SecurityCommunity");
@@ -347,7 +336,7 @@ public class HandOffUnRegisterComponent extends BaseServletComponent implements 
       sb.append("joincommunity = false;" + "\n");
       sb.append("for(i=0;i<myform.elements.length;i++){"+ "\n");
       sb.append("if( myform.elements[i].name == \"SecurityCommunity\" && myform.elements[i].checked  && myform.elements[i].value==6){" +"\n");
-      sb.append("alert (\"join community selected \");"+"\n");;
+      sb.append("alert (\"join community selected \");"+"\n");
       sb.append("joincommunity = true;" + "\n");
       sb.append("if( myform.elements[i].name == \"Enclave\" && myform.elements[i].value== \"\"){" + "\n");
       sb.append("alert (\"Please enter Enclave name \");" + "\n");
