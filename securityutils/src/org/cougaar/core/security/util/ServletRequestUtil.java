@@ -33,12 +33,16 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+
 public class ServletRequestUtil {
 
-  public InputStream sendRequest(String requestURL, Object req, long timeout)
-    throws Exception
+  public InputStream sendRequest(String requestURL, Object req, long timeout,
+      SSLSocketFactory sslSocketFactory)
+  throws Exception
   {
-    RequestThread t = new RequestThread(requestURL, req);
+    RequestThread t = new RequestThread(requestURL, req, sslSocketFactory);
     t.start();
     if (t.in != null) {
       return t.in;
@@ -60,64 +64,83 @@ public class ServletRequestUtil {
     }
     throw new IOException("Time out waiting for response from " + requestURL);
   }
+  
+  public InputStream sendRequest(String requestURL, Object req, long timeout)
+    throws Exception
+  {
+    return sendRequest(requestURL, req, timeout, null);
+  }
 
   class RequestThread extends Thread {
-    InputStream in;
-    String url;
-    Object req;
-    Exception exInfo;
-
-    public RequestThread(String requestURL, Object reqObj) {
+    private InputStream in;
+    private String url;
+    private Object req;
+    private Exception exInfo;
+    private SSLSocketFactory sslSocketFactory;
+    
+    public RequestThread(String requestURL, Object reqObj, SSLSocketFactory sslSocketFactory) {
       url = requestURL;
       req = reqObj;
+      this.sslSocketFactory = sslSocketFactory; 
     }
 
     public void run() {
       try {
-        HttpURLConnection conn = sendRequest(url, req, "POST");
+        HttpURLConnection conn = sendRequest(url, req, "POST", sslSocketFactory);
         in = conn.getInputStream();
       }
       catch (Exception ex) {
         exInfo = ex;
       }
     }
-  }
 
-  public static HttpURLConnection sendRequest(String requestURL, Object req, String method)
+    private HttpURLConnection sendRequest(String requestURL,
+        Object req, String method, SSLSocketFactory sslSocketFactory)
     throws Exception
-  {
-    URL url = new URL(requestURL);
-    HttpURLConnection huc = (HttpURLConnection)url.openConnection();
-    // Don't follow redirects automatically.
-    huc.setInstanceFollowRedirects(false);
-    // Let the system know that we want to do output
-    huc.setDoOutput(true);
-    // Let the system know that we want to do input
-    huc.setDoInput(true);
-    // No caching, we want the real thing
-    huc.setUseCaches(false);
-    // Specify the content type
-    huc.setRequestProperty("Content-Type",
-                           "application/x-www-form-urlencoded");
-    huc.setRequestMethod("POST");
-    if (req instanceof String) {
-      PrintWriter out = new PrintWriter(huc.getOutputStream());
-      String content = (String)req;
-      out.println(content);
-      out.flush();
-      out.close();
+    {
+      URL url = new URL(requestURL);
+      HttpURLConnection huc = (HttpURLConnection)url.openConnection();
+      if (sslSocketFactory != null) {
+        if (url.getProtocol().equals("https")) {
+          if (!(huc instanceof HttpsURLConnection)) {
+            throw new IllegalStateException("URL connection is not HTTPS: " + huc.getClass().getName());
+          }
+          // Set the socket factory.
+          ((HttpsURLConnection)huc).setSSLSocketFactory(sslSocketFactory);
+        }
+      }
+      // Don't follow redirects automatically.
+      huc.setInstanceFollowRedirects(false);
+      // Let the system know that we want to do output
+      huc.setDoOutput(true);
+      // Let the system know that we want to do input
+      huc.setDoInput(true);
+      // No caching, we want the real thing
+      huc.setUseCaches(false);
+      // Specify the content type
+      huc.setRequestProperty("Content-Type",
+                             "application/x-www-form-urlencoded");
+      huc.setRequestMethod("POST");
+      if (req instanceof String) {
+        PrintWriter out = new PrintWriter(huc.getOutputStream());
+        String content = (String)req;
+        out.println(content);
+        out.flush();
+        out.close();
 
-    }
-    else if (req instanceof Serializable) {
-      ObjectOutputStream out = new ObjectOutputStream(huc.getOutputStream());
-      out.writeObject(req);
-      out.flush();
-      out.close();
-    }
-    else {
-      throw new Exception("The input object type is not valid.");
+      }
+      else if (req instanceof Serializable) {
+        ObjectOutputStream out = new ObjectOutputStream(huc.getOutputStream());
+        out.writeObject(req);
+        out.flush();
+        out.close();
+      }
+      else {
+        throw new Exception("The input object type is not valid.");
+      }
+
+      return huc;
     }
 
-    return huc;
   }
 }
