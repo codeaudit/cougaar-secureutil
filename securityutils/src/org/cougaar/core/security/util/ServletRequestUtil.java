@@ -36,7 +36,12 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.cougaar.util.log.Logger;
+import org.cougaar.util.log.LoggerFactory;
+
+
 public class ServletRequestUtil {
+  private static Logger log = LoggerFactory.getInstance().createLogger(ServletRequestUtil.class);
 
   public InputStream sendRequest(String requestURL, Object req, long timeout,
       SSLSocketFactory sslSocketFactory)
@@ -99,6 +104,9 @@ public class ServletRequestUtil {
     throws Exception
     {
       URL url = new URL(requestURL);
+      if (log.isDebugEnabled()) {
+        log.debug("sendRequest: " + url + " - " + sslSocketFactory);
+      }
       HttpURLConnection huc = (HttpURLConnection)url.openConnection();
       if (sslSocketFactory != null) {
         if (url.getProtocol().equals("https")) {
