@@ -46,9 +46,10 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
   private BasicSSLSocketFactory() {
     try {
       SSLContext context = SSLContext.getInstance(SSLContextProtocol);
+      context.init(null, null, null);
       mySocketFactory = context.getSocketFactory();
     }
-    catch (NoSuchAlgorithmException ex) {
+    catch (Exception ex) {
       if (log.isErrorEnabled()) {
         log.error("Unable to instantiate SSL socket factory", ex);
       }
@@ -75,24 +76,36 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
    * @see javax.net.ssl.SSLSocketFactory#createSocket(java.net.Socket, java.lang.String, int, boolean)
    */
   public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
+    if (log.isDebugEnabled()) {
+      log.debug("Creating socket: " + host + ":" + port);
+    }
     return mySocketFactory.createSocket(socket, host, port, autoClose);
   }
   /* (non-Javadoc)
    * @see javax.net.SocketFactory#createSocket(java.lang.String, int)
    */
   public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
+    if (log.isDebugEnabled()) {
+      log.debug("Creating socket: " + host + ":" + port);
+    }
     return mySocketFactory.createSocket(host, port);
   }
   /* (non-Javadoc)
    * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int)
    */
   public Socket createSocket(InetAddress host, int port) throws IOException {
+    if (log.isDebugEnabled()) {
+      log.debug("Creating socket: " + host + ":" + port);
+    }
     return mySocketFactory.createSocket(host, port);
   }
   /* (non-Javadoc)
    * @see javax.net.SocketFactory#createSocket(java.lang.String, int, java.net.InetAddress, int)
    */
   public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
+    if (log.isDebugEnabled()) {
+      log.debug("Creating socket: " + host + ":" + port);
+    }
     return mySocketFactory.createSocket(host, port, localHost, localPort);
   }
 
@@ -100,6 +113,9 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
    * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int, java.net.InetAddress, int)
    */
   public Socket createSocket(InetAddress host, int port, InetAddress localHost, int localPort) throws IOException {
+    if (log.isDebugEnabled()) {
+      log.debug("Creating socket: " + host + ":" + port);
+    }
     return mySocketFactory.createSocket(host, port, localHost, localPort);
   }
   
