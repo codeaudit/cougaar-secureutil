@@ -37,28 +37,27 @@ public abstract class BaseSecurityServiceProvider
   implements ServiceProvider
 {
 //  protected LoggingService log;
-  protected static Logger log;
-
-  static {
-    log = LoggerFactory.getInstance().createLogger(BaseSecurityServiceProvider.class);
-  }
+  protected Logger log;
 
   protected ServiceBroker serviceBroker;
   protected String mySecurityCommunity;
-
+  
   public BaseSecurityServiceProvider(ServiceBroker sb, String community) {
+    log = LoggerFactory.getInstance().createLogger(getClass());
     if (sb == null) {
-      throw new IllegalArgumentException(getClass().getName() +
-          ": ServiceBroker parameter should not be null");
+      if (log.isWarnEnabled()) {
+        log.warn("ServiceBroker parameter is null");
+      }
     }
-  	init(sb, community);
-  }
-  
-  public BaseSecurityServiceProvider() {}
-  
-  public void init(ServiceBroker sb, String community) {
     serviceBroker = sb;
     mySecurityCommunity = community;
+  }
+  
+  public BaseSecurityServiceProvider() {
+    this(null, null);
+  }
+  
+  public void init(ServiceBroker sb, String community) {
 /*
     log = (LoggingService)
       sb.getService(this, LoggingService.class, null);  	
