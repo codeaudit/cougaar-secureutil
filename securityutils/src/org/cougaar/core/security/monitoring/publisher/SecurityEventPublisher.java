@@ -118,7 +118,7 @@ public class SecurityEventPublisher {
           Class sensorClass = null;
           Method publishEventMethod = null;
           String eventClassName = matcher.group(1);
-          if (eventClassName != null) {
+          if (eventClassName != null && eventClassName.length() > 0) {
             try {
               eventClass = Class.forName(eventClassName);
             } catch (ClassNotFoundException e1) {
@@ -129,11 +129,11 @@ public class SecurityEventPublisher {
           }
           
           String sensorClassName = matcher.group(2);
-          if (sensorClassName != null) {
+          if (sensorClassName != null && sensorClassName.length() > 0) {
             try {
               sensorClass = Class.forName(sensorClassName);
               Class[] params = new Class[1];
-              params[0] = Class.forName("org.cougaar.core.security.monitoring.event.FailureEvent");
+              params[0] = FailureEvent.class;
               publishEventMethod = sensorClass.getDeclaredMethod("publishEvent", params);
             } catch (ClassNotFoundException e1) {
               if (_log.isErrorEnabled()) {
@@ -150,6 +150,10 @@ public class SecurityEventPublisher {
             }
           }
           if (eventClass != null && publishEventMethod != null) {
+            if (_log.isDebugEnabled()) {
+              _log.debug("Adding IDMEF listener: " + eventClassName
+                  + " -> " + sensorClassName);
+            }
             m_eventTypes.put(eventClass, publishEventMethod);
           }
         }
