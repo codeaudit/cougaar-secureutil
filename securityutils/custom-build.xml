@@ -22,4 +22,33 @@
         <pathelement location="${cougaar.install.path}/sys/concurrent.jar"/>
     </path>
 
+    <!-- Build the source code package -->
+    <target name="custom-compile" id="custom.compile">
+      <if>
+        <contains string="${java.vm.version}" substring="${jdk.version.needed.142}"/>
+        <then>
+          <javac classpathref="core.class.path" debug="true"
+              deprecation="true" destdir="${securityservices.classes}"
+              source="1.4">
+            <src path="${securityservices.src}"/>
+            <src path="${securityservices}/src_jdk14"/>
+            <include name="**"/>
+          </javac>
+        </then>
+      </if>
+
+      <if>
+        <contains string="${java.vm.version}" substring="${jdk.version.needed.150}"/>
+        <then>
+          <javac classpathref="core.class.path" debug="true"
+              deprecation="true" destdir="${securityservices.classes}"
+              source="1.4">
+            <src path="${securityservices.src}"/>
+            <src path="${securityservices.base}/src_jdk15"/>
+            <include name="**"/>
+          </javac>
+        </then>
+      </if>
+    </target>
+
 </project>
