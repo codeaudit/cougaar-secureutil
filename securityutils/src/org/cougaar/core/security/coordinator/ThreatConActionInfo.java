@@ -37,8 +37,15 @@ public class ThreatConActionInfo implements Serializable {
   /**
    * Preceived threat level for action 
    */
-  public final static String LOW = "LOW";
-  public final static String HIGH = "HIGH";  
+  public final static String LOWSecurity = "LowSecurity";
+  public final static String HIGHSecurity = "HighSecurity";  
+
+  /**
+   * Preceived threat level for diagnosis 
+   */
+  public final static String NONEDiagnosis = "None";
+  public final static String LOWDiagnosis = "Low";
+  public final static String HIGHDiagnosis = "Severe";  
 
   String communityName;
   String level;
