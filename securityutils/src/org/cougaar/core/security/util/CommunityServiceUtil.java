@@ -473,10 +473,18 @@ public class CommunityServiceUtil {
    * @param role          The role of the agent(s) to return
    * @param listener A callback object that receives the results
    *                 of the lookup.
+   * @param runForever    For some change listeners, want to keep listening to changes
    */
   public void getCommunityAgent(String communityType, 
                                 String role,
                                 CommunityServiceUtilListener listener) {
+    getCommunityAgent(communityType, role, listener, false);
+  }
+
+  public void getCommunityAgent(String communityType, 
+                                String role,
+                                CommunityServiceUtilListener listener,
+                                boolean runForever) {
     if (_log.isDebugEnabled()) {
       _log.debug("Agent "+ _agent+" In getCommunityAgent Looking for agent in community of type " + communityType +
                  " with a role of " + role);
@@ -492,7 +500,7 @@ public class CommunityServiceUtil {
     WarnSchedulable ws =
       new WarnSchedulable(_threadService.getThread(this, tt), tt);
     CommunityChangeListener   ccl = 
-      new GetAgent(listener, ws, communityType, role);
+      new GetAgent(listener, ws, communityType, role, runForever);
     CommunityResponseListener crl = new ResultListener(listener, ws, ccl, Community.AGENTS_ONLY);
     String filter = "(&(CommunityType=" + communityType + 
       ")(Role=" + role +"))";
@@ -987,15 +995,18 @@ public class CommunityServiceUtil {
     private WarnSchedulable              _timerTask;
     private String                       _role;
     private boolean                      _allDone;
+    private boolean                      _runForever = false;
 
     public GetAgent(CommunityServiceUtilListener listener, 
                     WarnSchedulable timerTask,
                     String communityType,
-                    String role) {
+                    String role,
+                    boolean runForever) {
       _communityType = communityType;
       _listener = listener;
       _timerTask = timerTask;
       _role = role;
+      _runForever = runForever;
     }
 
     public void communityChanged(CommunityChangeEvent event) {
@@ -1042,9 +1053,11 @@ public class CommunityServiceUtil {
         }
         return;
       }
-      _timerTask.cancel();
-      _allDone = true;
-      _cs.removeListener(this);
+      if (!_runForever) {
+        _timerTask.cancel();
+        _allDone = true;
+        _cs.removeListener(this);
+      }
       if (_log.isDebugEnabled()) {
         _log.debug("Receive response  for agent : "+ _agent +"in GetAgent CommunityChangeListener");
         _log.debug("Response is : "+set); 
