@@ -40,6 +40,8 @@ public interface NetworkConfigurationService
   public final static int ConnectNormal        = 0;
   public final static int ConnectProtectedLan  = 1;
   public final static int ConnectVPNTunnel     = 2;
+  public final static String connectNames []
+    = {"Normal", "ProtectedLan", "VPNTunnel"};
 
   /**
    * This routine provides information about how a connection between
