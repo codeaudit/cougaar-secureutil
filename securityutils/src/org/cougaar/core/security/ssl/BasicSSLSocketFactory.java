@@ -40,6 +40,11 @@ import org.cougaar.util.log.Logger;
 import org.cougaar.util.log.LoggerFactory;
 
 
+/**
+ * @author srosset
+ *
+ * A dummy SSLSocketFactory that does not check the trust of server-side certificates.
+ */
 public class BasicSSLSocketFactory extends SSLSocketFactory {
   
   private static final String SSLContextProtocol = "TLS";
@@ -47,6 +52,9 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
   private static SSLSocketFactory singleton = new BasicSSLSocketFactory();
   private static Logger log = LoggerFactory.getInstance().createLogger(BasicSSLSocketFactory.class);
   
+  /**
+   * Constructor
+   */
   private BasicSSLSocketFactory() {
     try {
       SSLContext context = SSLContext.getInstance(SSLContextProtocol);
