@@ -101,10 +101,10 @@ public class WebProxyInstaller
       Method m = cmdClass.getDeclaredMethod("main", parameters);
       Object [] objectArgs = { newargs };
       m.invoke(null, objectArgs);
-      System.exit(0);   /* needed for some reason */
     } catch (Exception e) {
       e.printStackTrace();
     }
+    System.exit(0);   /* needed for some reason */
   }
  
   /**
