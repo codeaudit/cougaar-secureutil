@@ -32,75 +32,75 @@ import java.security.cert.X509Certificate;
 import java.util.zip.ZipFile;
 
 public class JarSignerParameters
-    implements ContentSignerParameters
+implements ContentSignerParameters
 {
-
-    public JarSignerParameters(String as[], URI uri, X509Certificate x509certificate, byte abyte0[], String s, X509Certificate ax509certificate[], byte abyte1[], 
-            ZipFile zipfile)
+  
+  public JarSignerParameters(String as[], URI uri, X509Certificate x509certificate, byte abyte0[], String s, X509Certificate ax509certificate[], byte abyte1[], 
+      ZipFile zipfile)
+  {
+    if(abyte0 == null || s == null || ax509certificate == null)
     {
-        if(abyte0 == null || s == null || ax509certificate == null)
-        {
-            throw new NullPointerException();
-        } else
-        {
-            args = as;
-            tsa = uri;
-            tsaCertificate = x509certificate;
-            signature = abyte0;
-            signatureAlgorithm = s;
-            signerCertificateChain = ax509certificate;
-            content = abyte1;
-            source = zipfile;
-            return;
-        }
-    }
-
-    public String[] getCommandLine()
+      throw new NullPointerException();
+    } else
     {
-        return args;
+      args = as;
+      tsa = uri;
+      tsaCertificate = x509certificate;
+      signature = abyte0;
+      signatureAlgorithm = s;
+      signerCertificateChain = ax509certificate;
+      content = abyte1;
+      source = zipfile;
+      return;
     }
-
-    public URI getTimestampingAuthority()
-    {
-        return tsa;
-    }
-
-    public X509Certificate getTimestampingAuthorityCertificate()
-    {
-        return tsaCertificate;
-    }
-
-    public byte[] getSignature()
-    {
-        return signature;
-    }
-
-    public String getSignatureAlgorithm()
-    {
-        return signatureAlgorithm;
-    }
-
-    public X509Certificate[] getSignerCertificateChain()
-    {
-        return signerCertificateChain;
-    }
-
-    public byte[] getContent()
-    {
-        return content;
-    }
-
-    public ZipFile getSource()
-    {
-        return source;
-    }
-
-    private String args[];
-    private URI tsa;
-    private X509Certificate tsaCertificate;
-    private byte signature[];
-    private String signatureAlgorithm;
-    private X509Certificate signerCertificateChain[];
-    private byte content[];
-    private ZipFile source;
+  }
+  
+  public String[] getCommandLine()
+  {
+    return args;
+  }
+  
+  public URI getTimestampingAuthority()
+  {
+    return tsa;
+  }
+  
+  public X509Certificate getTimestampingAuthorityCertificate()
+  {
+    return tsaCertificate;
+  }
+  
+  public byte[] getSignature()
+  {
+    return signature;
+  }
+  
+  public String getSignatureAlgorithm()
+  {
+    return signatureAlgorithm;
+  }
+  
+  public X509Certificate[] getSignerCertificateChain()
+  {
+    return signerCertificateChain;
+  }
+  
+  public byte[] getContent()
+  {
+    return content;
+  }
+  
+  public ZipFile getSource()
+  {
+    return source;
+  }
+  
+  private String args[];
+  private URI tsa;
+  private X509Certificate tsaCertificate;
+  private byte signature[];
+  private String signatureAlgorithm;
+  private X509Certificate signerCertificateChain[];
+  private byte content[];
+  private ZipFile source;
 }
