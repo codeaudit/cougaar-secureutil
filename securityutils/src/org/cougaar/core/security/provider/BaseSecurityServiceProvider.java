@@ -47,6 +47,10 @@ public abstract class BaseSecurityServiceProvider
   protected String mySecurityCommunity;
 
   public BaseSecurityServiceProvider(ServiceBroker sb, String community) {
+    if (sb == null) {
+      throw new IllegalArgumentException(getClass().getName() +
+          ": ServiceBroker parameter should not be null");
+    }
   	init(sb, community);
   }
   
