@@ -36,7 +36,6 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import org.cougaar.core.component.ServiceBroker;
 import org.cougaar.util.log.Logger;
 import org.cougaar.util.log.LoggerFactory;
 
@@ -127,9 +126,23 @@ public class WebProxyInstaller
     }
     ProxyURLStreamHandlerFactory factory = 
       new ProxyURLStreamHandlerFactory();
-    java.net.URL.setURLStreamHandlerFactory(factory);
-    if (_log != null && _log.isDebugEnabled()) {
-      _log.debug("proxy installed...");
+    try {
+      java.net.URL.setURLStreamHandlerFactory(factory);
+      if (_log != null && _log.isDebugEnabled()) {
+        _log.debug("proxy installed...");
+      }
+    }
+    catch (Error e) {
+      // The factory has already been defined. 
+      if (_log != null && _log.isWarnEnabled()) {
+        _log.warn("Unable to install Web Proxy... URL Stream handler already set", e);
+      }
+    }
+    catch (SecurityException e) {
+      // The Java security policy prevents it.
+      if (_log != null && _log.isWarnEnabled()) {
+        _log.warn("Unable to install Web Proxy... Not enough privileges", e);
+      }
     }
   }
 
