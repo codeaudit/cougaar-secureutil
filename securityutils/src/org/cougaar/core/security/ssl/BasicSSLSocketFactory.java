@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -51,7 +50,8 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
   private BasicSSLSocketFactory() {
     try {
       SSLContext context = SSLContext.getInstance(SSLContextProtocol);
-      context.init(null, null, null);
+      TrustManager[] tm = {new BasicTrustManager()};
+      context.init(null, tm, null);
       mySocketFactory = context.getSocketFactory();
     }
     catch (Exception ex) {
@@ -124,6 +124,11 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
     return mySocketFactory.createSocket(host, port, localHost, localPort);
   }
   
+  /**
+   * @author srosset
+   *
+   * A dummy TrustManager that accepts all certificates.
+   */
   private class BasicTrustManager implements X509TrustManager
   {
     private X509Certificate[] certs = {};
