@@ -28,9 +28,15 @@ package org.cougaar.core.security.coordinator;
 import java.io.Serializable;
 
 public class ThreatConActionInfo implements Serializable {
+  /**
+   * Completion code to be set as diagnosis
+   */
   public final static String ACTIVE = "ACTIVE";
   public final static String START = "START";  
 
+  /**
+   * Preceived threat level for action 
+   */
   public final static String LOW = "LOW";
   public final static String HIGH = "HIGH";  
 
