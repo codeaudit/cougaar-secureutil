@@ -87,8 +87,10 @@ public abstract class BaseSecurityServiceProvider
       throw new IllegalArgumentException("Illegal service class");
     }
     if(security != null) {
-      log.debug("Checking Security Permission for :"+serviceClass.getName()+
+      if (log.isDebugEnabled()) {
+        log.debug("Checking Security Permission for :"+serviceClass.getName()+
 		"\nRequestor is "+requestor.getClass().getName());
+      }
       security.checkPermission(new SecurityServicePermission(serviceClass.getName()));
     }
     Service service = null;
