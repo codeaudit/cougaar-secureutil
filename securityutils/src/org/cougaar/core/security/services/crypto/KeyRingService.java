@@ -36,8 +36,11 @@ import org.cougaar.core.security.policy.TrustedCaPolicy;
 import javax.net.ssl.X509KeyManager;
 
 import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
@@ -156,7 +159,19 @@ public interface KeyRingService extends Service {
 
   void addToIgnoredList(String cname) throws Exception;
 
-  public X509KeyManager getClientSSLKeyManager()
+  X509KeyManager getClientSSLKeyManager()
     throws IllegalStateException;
 
+  boolean isManagerReady();
+  
+  void installCertificate(String alias,
+      X509Certificate[] certificateChain)
+  throws CertificateException, KeyStoreException, NoSuchAlgorithmException, 
+  UnrecoverableKeyException;
+  
+  X509Certificate[] establishCertChain(X509Certificate certificate,
+      X509Certificate certificateReply)
+  throws CertificateException, KeyStoreException;
+  
+  String getNextAlias(String commonName);
 }
