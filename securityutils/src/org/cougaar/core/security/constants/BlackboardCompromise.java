@@ -24,4 +24,8 @@ public interface BlackboardCompromise {
   public static final String FOR_AGENT_PREP = "for agent";
   public static final String COMPROMISE_TIMESTAMP_PREP="timestamp";
 
+  // Constants for sensor
+  public static final String THREAT_ALERT_NONE = "NONE";
+  public static final String THREAT_ALERT_MODERATE = "MODERATE";
+  public static final String THREAT_ALERT_SEVERE = "SEVERE";
 }
