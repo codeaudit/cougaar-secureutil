@@ -64,9 +64,11 @@
         <pathelement location="${cougaar.install.path}/lib/community.jar"/>
         <pathelement location="${cougaar.install.path}/lib/mtsstd.jar"/>
         <!-- KAoS libraries -->
+    	<!--
         <pathelement location="${securityservices.base}/lib/kaos.jar"/>
         <pathelement location="${securityservices.base}/lib/safe.jar"/>
         <pathelement location="${securityservices.base}/sys/jas.jar"/>
+        -->
         <!-- Tomcat libraries -->
         <pathelement location="${cougaar.install.path}/sys/tomcat_40.jar"/>
 
