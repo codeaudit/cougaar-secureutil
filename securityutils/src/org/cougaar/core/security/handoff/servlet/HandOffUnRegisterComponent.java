@@ -46,9 +46,7 @@ import org.cougaar.core.security.handoff.blackboard.HandOffUnRegistration;
 import org.cougaar.core.security.util.CommunityServiceUtil;
 import org.cougaar.core.service.AgentIdentificationService;
 import org.cougaar.core.service.BlackboardService;
-import org.cougaar.core.service.DomainService;
 import org.cougaar.core.service.LoggingService;
-import org.cougaar.core.service.community.CommunityService;
 import org.cougaar.core.servlet.BaseServletComponent;
 import org.cougaar.util.UnaryPredicate;
 
