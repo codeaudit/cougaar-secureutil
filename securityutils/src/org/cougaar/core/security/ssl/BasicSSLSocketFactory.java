@@ -29,9 +29,14 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.cougaar.util.log.Logger;
 import org.cougaar.util.log.LoggerFactory;
 
@@ -119,4 +124,43 @@ public class BasicSSLSocketFactory extends SSLSocketFactory {
     return mySocketFactory.createSocket(host, port, localHost, localPort);
   }
   
+  private class BasicTrustManager implements X509TrustManager
+  {
+    private X509Certificate[] certs = {};
+    
+    /* (non-Javadoc)
+     * @see javax.net.ssl.X509TrustManager#getAcceptedIssuers()
+     */
+    public X509Certificate[] getAcceptedIssuers() {
+      if (log.isDebugEnabled()) {
+        log.debug("getAcceptedIssuers()");
+      }
+      return certs;
+    }
+    /* (non-Javadoc)
+     * @see javax.net.ssl.X509TrustManager#checkClientTrusted(java.security.cert.X509Certificate[], java.lang.String)
+     */
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+      if (log.isDebugEnabled()) {
+        String name = null;
+        if (chain != null) {
+          name = chain[0].getSubjectDN().getName();
+        }
+        log.debug("checkClientTrusted: " + name + " - authType:" + authType);
+      }
+    }
+
+    /* (non-Javadoc)
+     * @see javax.net.ssl.X509TrustManager#checkServerTrusted(java.security.cert.X509Certificate[], java.lang.String)
+     */
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+      if (log.isDebugEnabled()) {
+        String name = null;
+        if (chain != null) {
+          name = chain[0].getSubjectDN().getName();
+        }
+        log.debug("checkServerTrusted: " + name + " - authType:" + authType);
+      }
+    }
+  }
 }
