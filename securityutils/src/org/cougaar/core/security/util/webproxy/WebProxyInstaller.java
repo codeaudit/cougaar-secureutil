@@ -37,8 +37,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.cougaar.core.component.ServiceBroker;
-import org.cougaar.core.service.LoggingService;
-
+import org.cougaar.util.log.Logger;
+import org.cougaar.util.log.LoggerFactory;
 
 /**
  * This is a class that installs a proxy that intercepts the handling
@@ -67,7 +67,8 @@ import org.cougaar.core.service.LoggingService;
  */
 public class WebProxyInstaller
 {
-  private static LoggingService _log = null;
+  private static Logger _log = 
+     LoggerFactory.getInstance().createLogger(WebProxyInstaller.class);;
 
   static {
     AccessController.doPrivileged(new LoadProxyURLStreamHandler());
@@ -118,7 +119,9 @@ public class WebProxyInstaller
     try {
       WebProxyConfig.init();
     } catch (IOException ioe) {
-      _log.error("web proxy not installed - continuing");
+      if (_log.isErrorEnabled()) {
+        _log.error("web proxy not installed - continuing");
+      }
       return;
     }
     ProxyURLStreamHandlerFactory factory = 
