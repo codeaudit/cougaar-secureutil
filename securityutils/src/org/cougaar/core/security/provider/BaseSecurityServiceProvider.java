@@ -26,6 +26,8 @@
 
 package org.cougaar.core.security.provider;
 
+import java.security.Permission;
+
 import org.cougaar.core.component.Service;
 import org.cougaar.core.component.ServiceBroker;
 import org.cougaar.core.component.ServiceProvider;
@@ -41,8 +43,23 @@ public abstract class BaseSecurityServiceProvider
 
   protected ServiceBroker serviceBroker;
   protected String mySecurityCommunity;
+
+  private boolean checkGetServicePermission = true;
   
-  public BaseSecurityServiceProvider(ServiceBroker sb, String community) {
+  /**
+   * 
+   * The checkPermission parameter can be used by providers to either advertise
+   * the service to all components (if set to false), or only to components
+   * that are specified in the Java security policy.
+   *  
+   * @param sb
+   * @param community
+   * @param checkPermission - if true, calls to getService() will be protected
+   *  by the Java security manager. If false, calls to getService() will not
+   *  be protected by the Java security manager.
+   */
+  public BaseSecurityServiceProvider(ServiceBroker sb,
+      String community, boolean checkPermission) {
     log = LoggerFactory.getInstance().createLogger(getClass());
     if (sb == null) {
       if (log.isWarnEnabled()) {
@@ -51,6 +68,16 @@ public abstract class BaseSecurityServiceProvider
     }
     serviceBroker = sb;
     mySecurityCommunity = community;
+    this.checkGetServicePermission = checkPermission;
+  }
+  
+  /**
+   * Constructs a service provider
+   * @param sb - the service broker.
+   * @param community - The security community.
+   */
+  public BaseSecurityServiceProvider(ServiceBroker sb, String community) {
+    this(sb, community, true);
   }
   
   public BaseSecurityServiceProvider() {
@@ -85,7 +112,7 @@ public abstract class BaseSecurityServiceProvider
     if (serviceClass == null) {
       throw new IllegalArgumentException("Illegal service class");
     }
-    if(security != null) {
+    if(security != null && checkGetServicePermission) {
       if (log.isDebugEnabled()) {
         log.debug("Checking Security Permission for :"+serviceClass.getName()+
 		"\nRequestor is "+requestor.getClass().getName());
