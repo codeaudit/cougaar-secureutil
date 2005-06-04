@@ -126,7 +126,7 @@ public class JarFileHandler
         return true;
       } catch (Exception iox) {
         log.warn("Exception in signing jar file: " + file.getPath()
-	  + " - " + iox);
+	  + " - " + iox, iox);
       }
     }
     else {
