@@ -32,10 +32,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.AccessController;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PrivilegedAction;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -204,7 +206,6 @@ public class JARSigner
     
   }
   
-  //SignatureFile.Block block = signatureFile.generateBlock( this.privateKey, this.certChain, true );
   // a helper function that can take entries from one jar file and
   // write it to another jar stream
   public static void writeJarEntry( JarEntry je, JarFile jarFile, JarOutputStream jos )
@@ -221,9 +222,10 @@ public class JARSigner
   
   // the actual JAR signing method -- this is the method which
   // will be called by those wrapping the JARSigner class
-  public void signJarFile( JarFile jarFile, OutputStream outputStream )
+  public void signJarFile(final JarFile jarFile, 
+                          OutputStream outputStream)
   throws NoSuchAlgorithmException, InvalidKeyException,
-  SignatureException, CertificateException, IOException {
+         SignatureException, CertificateException, IOException {
     
     // calculate the necessary files for the signed jAR
     
@@ -240,18 +242,41 @@ public class JARSigner
     
     // construct the signature file object and the
     // signature block objects
-    SignatureFile signatureFile = createSignatureFile( manifest, messageDigest );
-    boolean externalSF = true;
-    String tsaUrl = null;
-    X509Certificate x509certificate = null;
-    ContentSigner signingMechanism = null;
-    String as[] = null;
-    SignatureFile.Block block =
-      signatureFile.generateBlock( privateKey, certChain,
-          externalSF, tsaUrl, x509certificate,
-          signingMechanism, as, jarFile);
-    
-    
+    final SignatureFile signatureFile 
+        = createSignatureFile( manifest, messageDigest );
+    final boolean externalSF = true;
+    final String tsaUrl = null;
+    final X509Certificate x509certificate = null;
+    final ContentSigner signingMechanism = null;
+    final String as[] = null;
+
+    Object val = 
+      AccessController.doPrivileged(new PrivilegedAction() {
+          public Object run() {
+            try {
+              return signatureFile.generateBlock(privateKey, 
+                                                 certChain,
+                                                 externalSF, 
+                                                 tsaUrl, 
+                                                 x509certificate,
+                                                 signingMechanism, 
+                                                 as, 
+                                                 jarFile);
+            } catch (SignatureException se) {
+              return se;
+            } catch (Exception e) {
+              return 
+                new SignatureException(e.getMessage(), e);
+            }
+          }
+        });
+    SignatureFile.Block block = null;
+    if (val instanceof SignatureFile.Block) {
+      block = (SignatureFile.Block) val;
+    } else if (val instanceof SignatureException) {
+      throw (SignatureException) val;
+    }
+
     // start writing out the signed JAR file
     
     // write out the manifest to the output jar stream
