@@ -51,4 +51,22 @@
       </if>
     </target>
 
+    <!-- install config files -->
+    <target name="custom-install-conf" id="custom.install">
+      <unzip src="${securityservices.base}/test/configs/cougaar-support/acme-enclave-support.zip"
+             dest="${securityservices.staging}">
+      </unzip>
+      <unzip src="${securityservices.base}/test/configs/cougaar-support/commons_isat_plugins.zip"
+             dest="${securityservices.staging}/lib">
+      </unzip>
+      <untar src="${securityservices.base}/test/configs/cougaar-support/isat.tar.gz"
+             compression="gzip"
+             dest="${securityservices.staging}">
+      </untar>
+      <untar src="${securityservices.base}/test/configs/cougaar-support/yp.tar.gz"
+             compression="gzip"
+             dest="${securityservices.staging}">
+      </untar>
+    </target>
+
 </project>
