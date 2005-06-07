@@ -20,6 +20,8 @@
 
         <pathelement location="${cougaar.install.path}/sys/servlet.jar"/>
         <pathelement location="${cougaar.install.path}/sys/concurrent.jar"/>
+
+        <pathelement location="${securityservices.base}/sys/jarsigner.jar"/> 
     </path>
 
     <!-- Build the source code package -->
@@ -27,6 +29,7 @@
       <if>
         <contains string="${java.vm.version}" substring="${jdk.version.needed.142}"/>
         <then>
+          <echo message="java 1.4"/>
           <javac classpathref="core.class.path" debug="true"
               deprecation="true" destdir="${securityservices.classes}"
               source="1.4">
@@ -40,6 +43,7 @@
       <if>
         <contains string="${java.vm.version}" substring="${jdk.version.needed.150}"/>
         <then>
+          <echo message="java 1.5"/>
           <javac classpathref="core.class.path" debug="true"
               deprecation="true" destdir="${securityservices.classes}"
               source="1.4">
