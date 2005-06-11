@@ -36,6 +36,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.cougaar.core.security.util.webproxy.http.Handler;
 import org.cougaar.util.log.Logger;
 import org.cougaar.util.log.LoggerFactory;
 
@@ -69,6 +70,9 @@ public class WebProxyInstaller
   private static Logger _log = 
      LoggerFactory.getInstance().createLogger(WebProxyInstaller.class);;
 
+  private static final String HANDLER_PROP_NAME = "java.protocol.handler.pkgs";
+  private static String handlerProperty;
+     
   static {
     AccessController.doPrivileged(new LoadProxyURLStreamHandler());
   }
@@ -124,8 +128,10 @@ public class WebProxyInstaller
       }
       return;
     }
+    
     ProxyURLStreamHandlerFactory factory = 
       new ProxyURLStreamHandlerFactory();
+    
     try {
       java.net.URL.setURLStreamHandlerFactory(factory);
       if (_log != null && _log.isDebugEnabled()) {
@@ -167,10 +173,37 @@ public class WebProxyInstaller
     }
   }
 
+  /**
+   * Sets the java.protocol.handler.pkgs property, which registers a new type of URI protocol handler.
+   * <p>
+   * 
+   * @return
+   */
+  private static synchronized String setHandlerProperty() {
+    if (handlerProperty != null) {
+      throw new IllegalStateException("setHandlerProperty has already been called");
+    }
+    
+    handlerProperty = System.getProperty(HANDLER_PROP_NAME);
+    String pkgName = Handler.class.getPackage().getName();
+    pkgName = pkgName.substring(0, pkgName.lastIndexOf('.'));
+    if (handlerProperty == null) {
+      handlerProperty = pkgName;
+    }
+    else {
+      handlerProperty += "|" + pkgName;
+    }
+    System.setProperty(HANDLER_PROP_NAME, handlerProperty);
+    if (_log.isDebugEnabled()) {
+      _log.debug("setHandlerProperty: " + handlerProperty);
+    }
+    return handlerProperty;
+  }
+  
   private static class LoadProxyURLStreamHandler implements PrivilegedAction
   {
     public Object run() {
-      return new ProxyURLStreamHandler();
+      return new Handler();
     }
   }
 

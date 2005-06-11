@@ -28,8 +28,9 @@ package org.cougaar.core.security.util.webproxy;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.StringTokenizer;
 
-import org.cougaar.core.service.LoggingService;
+import org.cougaar.core.security.util.webproxy.http.Handler;
 import org.cougaar.util.log.Logger;
 import org.cougaar.util.log.LoggerFactory;
 
@@ -55,10 +56,12 @@ import org.cougaar.util.log.LoggerFactory;
 class ProxyURLStreamHandlerFactory implements URLStreamHandlerFactory
 {
   private static Logger _log = null;
+  private static final String HANDLER_PROP_NAME = "java.protocol.handler.pkgs";
+  //private static final String DEFAULT_HANDLER = "sun.net.www.protocol";
+  
   static {
     _log = LoggerFactory.getInstance().createLogger(ProxyURLStreamHandlerFactory.class);
   }
-
 
   /**
    * This method provides URLStreamHandlers for the jndi and http
@@ -84,15 +87,59 @@ class ProxyURLStreamHandlerFactory implements URLStreamHandlerFactory
       if (_log.isDebugEnabled()) {
         _log.debug("Returning the proxy handler");
       }
-      return new ProxyURLStreamHandler();
+      return new Handler();
     } else if (protocol.equals("jndi")) {
+      // Tomcat JNDI factory.
       return new org.apache.naming.resources.DirContextURLStreamHandler();
     } else {
-      if (_log.isDebugEnabled()) {
-        _log.debug("using the default handler");
+      try {
+        return getURLStreamHandler(protocol);
       }
-      return null;
+      catch (Exception e) {
+        _log.error("Unable to parse property", e);
+        return null;
+      }
     }
   }
 
+  /**
+   * @param protocol
+   * @return
+   */
+  private URLStreamHandler getURLStreamHandler(String protocol) {
+    String prop = "";
+    try {
+      prop = System.getProperty(HANDLER_PROP_NAME);
+      if (prop == null) {
+        prop = "";
+      }
+    }
+    catch (Exception e) {
+      _log.error("Unable to read property: " + HANDLER_PROP_NAME, e);
+    }
+    //prop = prop + (prop.length() > 0 ? "|" : "") + DEFAULT_HANDLER;
+    
+    StringTokenizer st = new StringTokenizer(prop, "|");
+    while (st.hasMoreTokens()) {
+      String pkgName = st.nextToken();
+      String s1 = (new StringBuilder()).append(pkgName).append(".").append(protocol).append(".Handler").toString();
+      Class class1;
+      if (_log.isDebugEnabled()) {
+        _log.debug("Trying to load " + s1);
+      }
+      try {
+        class1 = Class.forName(s1);
+        return (URLStreamHandler)class1.newInstance();
+      } catch (Exception e) {
+        if (_log.isDebugEnabled()) {
+          _log.debug("Load of " + s1 + " failed: " + e.getMessage());
+        }
+        continue;
+      }
+    }
+    if (_log.isDebugEnabled()) {
+      _log.debug("using the default handler");
+    }
+    return null;
+  }
 }
