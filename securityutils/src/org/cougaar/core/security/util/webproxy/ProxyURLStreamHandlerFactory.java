@@ -122,7 +122,7 @@ class ProxyURLStreamHandlerFactory implements URLStreamHandlerFactory
     StringTokenizer st = new StringTokenizer(prop, "|");
     while (st.hasMoreTokens()) {
       String pkgName = st.nextToken();
-      String s1 = (new StringBuilder()).append(pkgName).append(".").append(protocol).append(".Handler").toString();
+      String s1 = (new StringBuffer()).append(pkgName).append(".").append(protocol).append(".Handler").toString();
       Class class1;
       if (_log.isDebugEnabled()) {
         _log.debug("Trying to load " + s1);
