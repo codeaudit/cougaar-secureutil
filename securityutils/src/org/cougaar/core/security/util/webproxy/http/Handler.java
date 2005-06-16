@@ -57,13 +57,12 @@ public class Handler extends URLStreamHandler
     throws IOException
   {
     if (_log.isDebugEnabled()) {
-      _log.debug("Opening url " + u.toString());
+      _log.debug("Opening url " + u.toString() + " Port=" + u.getPort());
     }
     String path = u.toString();
     if (WebProxyConfig.map(path) != null) {
       if (_log.isDebugEnabled()) {
         _log.debug("Using proxy");
-        _log.debug("++++++++++++++++++++++++++++++++++++++++++++++++");
       }
       return new ProxyURLConnection(u);
     } else {
@@ -71,13 +70,9 @@ public class Handler extends URLStreamHandler
        * Otherwise go to Howard Street in San Francisco...
        */
       if (_log.isDebugEnabled()) {
-        _log.debug("Howard Street");
         _log.debug("Using original web client");
-        _log.debug("++++++++++++++++++++++++++++++++++++++++++++++++");
       }
-      return new sun.net.www.protocol.http.HttpURLConnection(u,
-                                                             u.getHost(),
-                                                             u.getPort());
+      return new sun.net.www.protocol.http.HttpURLConnection(u, null);
     }
   }
 }
