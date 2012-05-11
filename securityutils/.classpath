@@ -39,7 +39,6 @@
 	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/csmart.jar"/>
 	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/datagrabber.jar"/>
 	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/glm.jar"/>
-	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/javaiopatch.jar"/>
 	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/mtsstd.jar"/>
 	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/ping.jar"/>
 	<classpathentry kind="lib" path="C:/UL/cougaar-b11_2-1109/lib/planning.jar"/>
